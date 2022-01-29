@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <button onclick="start()">start</button>
+        <button onclick="stop()">stop</button>
+        <span id="listening">
+            Stopped
+        </span>
+    </div>
+    <div id="result">
+
+    </div>
+    <script>
+        // new speech recognition object
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        var recognition = new SpeechRecognition();
+        let listening = document.getElementById('listening');
+        // This runs when the speech recognition service starts
+        recognition.onstart = function () {
+            console.log("We are listening. Try speaking into the microphone.");
+        };
+
+        recognition.onspeechend = function () {
+            // when user is done speaking
+            stop()
+        }
+
+        // This runs when the speech recognition service returns result
+        recognition.onresult = function (event) {
+            var transcript = event.results[0][0].transcript;
+            var confidence = event.results[0][0].confidence;
+            console.log(transcript);
+            let resultDiv = `<p>${transcript}</p>`
+            document.getElementById('result').innerHTML += resultDiv;
+            document.getElementById('result').innerHTML += confidence * 100 + "%";
+        };
+
+        // start recognition
+        function start() {
+            recognition.start();
+            listening.innerHTML = "Listening...";
+        }
+        // stop recognition
+        function stop() {
+            recognition.stop();
+            listening.innerHTML = "Stopped";
+        }
+
+    </script>
+
+</body>
+
+</html>
